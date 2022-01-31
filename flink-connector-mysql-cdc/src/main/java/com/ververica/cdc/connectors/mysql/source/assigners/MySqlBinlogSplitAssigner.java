@@ -121,8 +121,10 @@ public class MySqlBinlogSplitAssigner implements MySqlSplitAssigner {
             BinlogOffset startOffset = null;
             switch (sourceConfig.getStartupOptions().startupMode) {
                 case SPECIFIC_OFFSETS:
-                    startOffset = new BinlogOffset(sourceConfig.getStartupOptions().specificOffsetFile,
-                            sourceConfig.getStartupOptions().specificOffsetPos);
+                    startOffset =
+                            new BinlogOffset(
+                                    sourceConfig.getStartupOptions().specificOffsetFile,
+                                    sourceConfig.getStartupOptions().specificOffsetPos);
                     break;
                 default:
                     startOffset = DebeziumUtils.currentBinlogOffset(jdbc);

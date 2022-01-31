@@ -68,6 +68,7 @@ public class MySqlSourceConfigFactory implements Serializable {
     private double distributionFactorLower =
             SPLIT_KEY_EVEN_DISTRIBUTION_FACTOR_LOWER_BOUND.defaultValue();
     private boolean includeSchemaChanges = false;
+    private boolean includeTransactionMetadata = false;
     private Properties dbzProperties;
 
     public MySqlSourceConfigFactory hostname(String hostname) {
@@ -207,6 +208,12 @@ public class MySqlSourceConfigFactory implements Serializable {
         return this;
     }
 
+    /** Whether the {@link MySqlSource} should output transaction metadata or not. */
+    public MySqlSourceConfigFactory includeTransactionMetadata(boolean includeTransactionMetadata) {
+        this.includeTransactionMetadata = includeTransactionMetadata;
+        return this;
+    }
+
     /** Specifies the startup options. */
     public MySqlSourceConfigFactory startupOptions(StartupOptions startupOptions) {
         switch (startupOptions.startupMode) {
@@ -265,6 +272,7 @@ public class MySqlSourceConfigFactory implements Serializable {
         // but it'll cause lose of precise when the value is larger than 2^63,
         // so use "precise" mode to avoid it.
         props.put("bigint.unsigned.handling.mode", "precise");
+        props.put("provide.transaction.metadata", includeTransactionMetadata);
 
         if (serverIdRange != null) {
             int serverId = serverIdRange.getServerId(subtaskId);
@@ -304,6 +312,7 @@ public class MySqlSourceConfigFactory implements Serializable {
                 distributionFactorUpper,
                 distributionFactorLower,
                 includeSchemaChanges,
+                includeTransactionMetadata,
                 props);
     }
 }
