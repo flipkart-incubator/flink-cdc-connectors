@@ -69,6 +69,7 @@ public class MySqlSourceConfigFactory implements Serializable {
             SPLIT_KEY_EVEN_DISTRIBUTION_FACTOR_LOWER_BOUND.defaultValue();
     private boolean includeSchemaChanges = false;
     private boolean scanNewlyAddedTableEnabled = false;
+    private boolean includeTransactionMetadata = false;
     private Properties dbzProperties;
 
     public MySqlSourceConfigFactory hostname(String hostname) {
@@ -208,6 +209,12 @@ public class MySqlSourceConfigFactory implements Serializable {
         return this;
     }
 
+    /** Whether the {@link MySqlSource} should output transaction metadata or not. */
+    public MySqlSourceConfigFactory includeTransactionMetadata(boolean includeTransactionMetadata) {
+        this.includeTransactionMetadata = includeTransactionMetadata;
+        return this;
+    }
+
     /** Whether the {@link MySqlSource} should scan the newly added tables or not. */
     public MySqlSourceConfigFactory scanNewlyAddedTableEnabled(boolean scanNewlyAddedTableEnabled) {
         this.scanNewlyAddedTableEnabled = scanNewlyAddedTableEnabled;
@@ -271,6 +278,8 @@ public class MySqlSourceConfigFactory implements Serializable {
         // but it'll cause lose of precise when the value is larger than 2^63,
         // so use "precise" mode to avoid it.
         props.put("bigint.unsigned.handling.mode", "precise");
+        props.setProperty(
+                "provide.transaction.metadata", String.valueOf(includeTransactionMetadata));
 
         if (serverIdRange != null) {
             int serverId = serverIdRange.getServerId(subtaskId);
@@ -311,6 +320,7 @@ public class MySqlSourceConfigFactory implements Serializable {
                 distributionFactorLower,
                 includeSchemaChanges,
                 scanNewlyAddedTableEnabled,
+                includeTransactionMetadata,
                 props);
     }
 }
