@@ -346,7 +346,7 @@ public class RecordUtils {
     }
 
     public static BinlogOffset getBinlogPosition(Map<String, ?> offset) {
-        Map<String, String> offsetStrMap = new HashMap<>();
+        Map<String, Object> offsetStrMap = new HashMap<>();
         for (Map.Entry<String, ?> entry : offset.entrySet()) {
             offsetStrMap.put(
                     entry.getKey(), entry.getValue() == null ? null : entry.getValue().toString());

@@ -53,9 +53,9 @@ public class BinlogOffset implements Comparable<BinlogOffset>, Serializable {
     public static final BinlogOffset INITIAL_OFFSET = new BinlogOffset("", 0);
     public static final BinlogOffset NO_STOPPING_OFFSET = new BinlogOffset("", Long.MIN_VALUE);
 
-    private final Map<String, String> offset;
+    private final Map<String, Object> offset;
 
-    public BinlogOffset(Map<String, String> offset) {
+    public BinlogOffset(Map<String, Object> offset) {
         this.offset = offset;
     }
 
@@ -71,9 +71,9 @@ public class BinlogOffset implements Comparable<BinlogOffset>, Serializable {
             long binlogEpochSecs,
             @Nullable String restartGtidSet,
             @Nullable Integer serverId) {
-        Map<String, String> offsetMap = new HashMap<>();
+        Map<String, Object> offsetMap = new HashMap<>();
         offsetMap.put(BINLOG_FILENAME_OFFSET_KEY, filename);
-        offsetMap.put(BINLOG_POSITION_OFFSET_KEY, String.valueOf(position));
+        offsetMap.put(BINLOG_POSITION_OFFSET_KEY, position);
         offsetMap.put(EVENTS_TO_SKIP_OFFSET_KEY, String.valueOf(restartSkipEvents));
         offsetMap.put(ROWS_TO_SKIP_OFFSET_KEY, String.valueOf(restartSkipRows));
         offsetMap.put(TIMESTAMP_KEY, String.valueOf(binlogEpochSecs));
@@ -86,12 +86,12 @@ public class BinlogOffset implements Comparable<BinlogOffset>, Serializable {
         this.offset = offsetMap;
     }
 
-    public Map<String, String> getOffset() {
+    public Map<String, Object> getOffset() {
         return offset;
     }
 
     public String getFilename() {
-        return offset.get(BINLOG_FILENAME_OFFSET_KEY);
+        return String.valueOf(offset.get(BINLOG_FILENAME_OFFSET_KEY));
     }
 
     public long getPosition() {
@@ -107,7 +107,7 @@ public class BinlogOffset implements Comparable<BinlogOffset>, Serializable {
     }
 
     public String getGtidSet() {
-        return offset.get(GTID_SET_KEY);
+        return String.valueOf(offset.get(GTID_SET_KEY));
     }
 
     public long getTimestamp() {

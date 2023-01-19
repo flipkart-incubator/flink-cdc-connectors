@@ -39,7 +39,7 @@ public class BinlogOffsetSerializer {
 
     public BinlogOffset deserialize(byte[] bytes) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
-        Map<String, String> offset = objectMapper.readValue(bytes, Map.class);
+        Map<String, Object> offset = objectMapper.readValue(bytes, Map.class);
         return new BinlogOffset(offset);
     }
 }
