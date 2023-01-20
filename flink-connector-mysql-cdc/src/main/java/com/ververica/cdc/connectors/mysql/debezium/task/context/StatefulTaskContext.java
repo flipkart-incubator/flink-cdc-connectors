@@ -53,6 +53,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -170,8 +171,24 @@ public class StatefulTaskContext {
                         ? BinlogOffset.INITIAL_OFFSET
                         : mySqlSplit.asBinlogSplit().getStartingOffset();
 
+
+        LOG.info("INCOMING_OFFSETS ");
+        Map<String, Object> configs = new HashMap<>(offset.getOffset().size());
+        for (Map.Entry<String, Object> entry : offset.getOffset().entrySet()) {
+            if (entry.getKey().contains("transaction_data_collection_order")) {
+                configs.put(entry.getKey(),Long.parseLong(entry.getValue().toString()));
+            } else {
+                configs.put(entry.getKey(), entry.getValue());
+            }
+        }
+
+        for (Map.Entry<String, Object> entry : configs.entrySet()) {
+            LOG.info(entry.getKey() + "/" + entry.getValue());
+        }
+
+
         MySqlOffsetContext mySqlOffsetContext =
-                (MySqlOffsetContext) loader.load(offset.getOffset());
+                (MySqlOffsetContext) loader.load(configs);
 
         if (!isBinlogAvailable(mySqlOffsetContext)) {
             throw new IllegalStateException(

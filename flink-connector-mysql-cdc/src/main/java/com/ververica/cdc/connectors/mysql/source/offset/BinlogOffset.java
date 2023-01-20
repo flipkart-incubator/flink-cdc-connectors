@@ -73,7 +73,7 @@ public class BinlogOffset implements Comparable<BinlogOffset>, Serializable {
             @Nullable Integer serverId) {
         Map<String, Object> offsetMap = new HashMap<>();
         offsetMap.put(BINLOG_FILENAME_OFFSET_KEY, filename);
-        offsetMap.put(BINLOG_POSITION_OFFSET_KEY, position);
+        offsetMap.put(BINLOG_POSITION_OFFSET_KEY, Long.valueOf(position));
         offsetMap.put(EVENTS_TO_SKIP_OFFSET_KEY, String.valueOf(restartSkipEvents));
         offsetMap.put(ROWS_TO_SKIP_OFFSET_KEY, String.valueOf(restartSkipRows));
         offsetMap.put(TIMESTAMP_KEY, String.valueOf(binlogEpochSecs));
