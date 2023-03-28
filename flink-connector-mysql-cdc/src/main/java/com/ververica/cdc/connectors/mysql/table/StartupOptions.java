@@ -29,6 +29,8 @@ public final class StartupOptions implements Serializable {
 
     public final StartupMode startupMode;
     public final String specificOffsetFile;
+    public final String gtId;
+    public final Integer serverId;
     public final Integer specificOffsetPos;
     public final Long startupTimestampMillis;
 
@@ -37,7 +39,7 @@ public final class StartupOptions implements Serializable {
      * continue to read the latest binlog.
      */
     public static StartupOptions initial() {
-        return new StartupOptions(StartupMode.INITIAL, null, null, null);
+        return new StartupOptions(StartupMode.INITIAL, null, null, null, null, null);
     }
 
     /**
@@ -46,7 +48,7 @@ public final class StartupOptions implements Serializable {
      * binlog is guaranteed to contain the entire history of the database.
      */
     public static StartupOptions earliest() {
-        return new StartupOptions(StartupMode.EARLIEST_OFFSET, null, null, null);
+        return new StartupOptions(StartupMode.EARLIEST_OFFSET, null, null, null, null, null);
     }
 
     /**
@@ -54,7 +56,7 @@ public final class StartupOptions implements Serializable {
      * the end of the binlog which means only have the changes since the connector was started.
      */
     public static StartupOptions latest() {
-        return new StartupOptions(StartupMode.LATEST_OFFSET, null, null, null);
+        return new StartupOptions(StartupMode.LATEST_OFFSET, null, null, null, null, null);
     }
 
     /**
@@ -63,7 +65,23 @@ public final class StartupOptions implements Serializable {
      */
     public static StartupOptions specificOffset(String specificOffsetFile, int specificOffsetPos) {
         return new StartupOptions(
-                StartupMode.SPECIFIC_OFFSETS, specificOffsetFile, specificOffsetPos, null);
+                StartupMode.SPECIFIC_OFFSETS,
+                specificOffsetFile,
+                specificOffsetPos,
+                null,
+                null,
+                null);
+    }
+
+    public static StartupOptions specificOffset(
+            String specificOffsetFile, int specificOffsetPos, String gtId, Integer serverId) {
+        return new StartupOptions(
+                StartupMode.SPECIFIC_OFFSETS,
+                specificOffsetFile,
+                specificOffsetPos,
+                null,
+                gtId,
+                serverId);
     }
 
     /**
@@ -76,18 +94,23 @@ public final class StartupOptions implements Serializable {
      * @param startupTimestampMillis timestamp for the startup offsets, as milliseconds from epoch.
      */
     public static StartupOptions timestamp(long startupTimestampMillis) {
-        return new StartupOptions(StartupMode.TIMESTAMP, null, null, startupTimestampMillis);
+        return new StartupOptions(
+                StartupMode.TIMESTAMP, null, null, startupTimestampMillis, null, null);
     }
 
     private StartupOptions(
             StartupMode startupMode,
             String specificOffsetFile,
             Integer specificOffsetPos,
-            Long startupTimestampMillis) {
+            Long startupTimestampMillis,
+            String gtId,
+            Integer serverId) {
         this.startupMode = startupMode;
         this.specificOffsetFile = specificOffsetFile;
         this.specificOffsetPos = specificOffsetPos;
         this.startupTimestampMillis = startupTimestampMillis;
+        this.gtId = gtId;
+        this.serverId = serverId;
 
         switch (startupMode) {
             case INITIAL:

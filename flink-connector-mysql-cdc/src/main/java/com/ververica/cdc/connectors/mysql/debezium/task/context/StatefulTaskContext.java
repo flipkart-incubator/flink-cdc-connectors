@@ -171,12 +171,11 @@ public class StatefulTaskContext {
                         ? BinlogOffset.INITIAL_OFFSET
                         : mySqlSplit.asBinlogSplit().getStartingOffset();
 
-
         LOG.info("INCOMING_OFFSETS ");
         Map<String, Object> configs = new HashMap<>(offset.getOffset().size());
         for (Map.Entry<String, Object> entry : offset.getOffset().entrySet()) {
             if (entry.getKey().contains("transaction_data_collection_order")) {
-                configs.put(entry.getKey(),Long.parseLong(entry.getValue().toString()));
+                configs.put(entry.getKey(), Long.parseLong(entry.getValue().toString()));
             } else {
                 configs.put(entry.getKey(), entry.getValue());
             }
@@ -186,9 +185,7 @@ public class StatefulTaskContext {
             LOG.info(entry.getKey() + "/" + entry.getValue());
         }
 
-
-        MySqlOffsetContext mySqlOffsetContext =
-                (MySqlOffsetContext) loader.load(configs);
+        MySqlOffsetContext mySqlOffsetContext = (MySqlOffsetContext) loader.load(configs);
 
         if (!isBinlogAvailable(mySqlOffsetContext)) {
             throw new IllegalStateException(

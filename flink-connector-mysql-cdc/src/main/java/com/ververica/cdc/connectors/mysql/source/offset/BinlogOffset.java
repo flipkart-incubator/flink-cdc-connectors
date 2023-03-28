@@ -156,6 +156,9 @@ public class BinlogOffset implements Comparable<BinlogOffset>, Serializable {
 
         String gtidSetStr = this.getGtidSet();
         String targetGtidSetStr = that.getGtidSet();
+        if (targetGtidSetStr.equalsIgnoreCase("null")) {
+            targetGtidSetStr = null;
+        }
         if (StringUtils.isNotEmpty(targetGtidSetStr)) {
             // The target offset uses GTIDs, so we ideally compare using GTIDs ...
             if (StringUtils.isNotEmpty(gtidSetStr)) {

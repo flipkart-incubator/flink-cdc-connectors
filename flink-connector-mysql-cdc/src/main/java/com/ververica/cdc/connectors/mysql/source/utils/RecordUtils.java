@@ -349,8 +349,7 @@ public class RecordUtils {
         Map<String, Object> offsetStrMap = new HashMap<>();
 
         for (Map.Entry<String, ?> entry : offset.entrySet()) {
-            offsetStrMap.put(
-                    entry.getKey(), entry.getValue() == null ? null : entry.getValue());
+            offsetStrMap.put(entry.getKey(), entry.getValue() == null ? null : entry.getValue());
         }
         return new BinlogOffset(offsetStrMap);
     }
