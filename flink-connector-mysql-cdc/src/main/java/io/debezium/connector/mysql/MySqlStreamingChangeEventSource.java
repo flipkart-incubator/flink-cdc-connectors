@@ -89,9 +89,7 @@ import static io.debezium.util.Strings.isNullOrEmpty;
  *
  * <p>Line 1286-1292 : Adjust GTID merging logic to support recovering from job which previously
  * specifying starting offset on start.
- *
  */
-
 public class MySqlStreamingChangeEventSource implements StreamingChangeEventSource {
 
     private static final Logger LOGGER =
